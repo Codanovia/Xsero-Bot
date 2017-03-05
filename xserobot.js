@@ -138,13 +138,6 @@ bot.on("message", msg => {
         PlayQueueCommand(message);
     }
 
-    // Komenda ?setgame
-    if(msg.content.startsWith(config.prefix + "setgame")) {
-        if(msg.author.id !== config.ownerID) return msg.channel.sendMessage("Nie masz uprawnień do używania tej komendy!");
-        let game = msg.content.split(" ").slice(10);
-        bot.user.setGame(game[0]);
-    }
-
     // Komenda ?about
     if(msg.content.startsWith(config.prefix + "about")) {
       msg.channel.sendMessage(`Bot Discord'a, który został napisany w JavaScript (node.js) używając biblioteki discord.js.
@@ -178,7 +171,6 @@ bot.on("message", msg => {
 
         Komendy dostępne wyłącznie dla właściciela bota:
         **?prefix**
-        **?setgame**
         **?shutdown**
 
         Możecie wymyślić propozycje swoich komend. :wink:
@@ -224,9 +216,6 @@ bot.on("message", msg => {
     }
     else if(msg.content.startsWith(config.prefix + "help prefix")) {
         msg.channel.sendMessage("**(KOMENDA DOSTĘNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Zmienia prefiks komend");
-    }
-    else if(msg.content.startsWith(config.prefix + "help setgame")) {
-        msg.channel.sendMessage("**(KOMENDA DOSTĘPNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Ustawia grę dla bota.");
     }
     else if(msg.content.startsWith(config.prefix + "help shutdown")) {
         msg.channel.sendMessage("**(KOMENDA DOSTĘPNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Wyłącza bota");
