@@ -353,7 +353,6 @@ member.guild.defaultChannel.sendMessage(`**${member.user.username}** opuścił n
 /// Ta funkcja zostaje włączona, gdy bot będzie online
 bot.on('ready', () => {
 console.log(`Gotowy do aktywności w ${bot.channels.size} kanałach na ${bot.guilds.size} serwerach, łącznie obsługuję ${bot.users.size} użytkowników`);
-bot.user.setGame("Praca w toku");
 });
 
 /// Te funkcje informują konsolę o błędach, ostrzeżeniach i debugowaniach
