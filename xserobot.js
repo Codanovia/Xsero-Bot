@@ -1,3 +1,4 @@
+/* IMPORTOWANIE BIBLIOTEK I ZARZĄDZENIE MUZYKĄ ORAZ PLIKAMI BOTA */
 /// Importowanie biblioteki discord.js
 const Discord = require('discord.js');
 /// Importowanie biblioteki odpowiedzialnej za pobranie filmu z YT dla bota
@@ -8,15 +9,15 @@ const youtube = require('./youtube.js');
 const config = require('./config.json');
 /// Uzyskuje dostęp do klasy zawartej w bibliotece
 const bot = new Discord.Client();
-/// Lista piosenek puszczanych przez bota
+/// Kolejka piosenek puszczanych przez bota
 var ytAudioQueue = [];
+/// Zmienna zarządzająca puszczeniem piosenek na kanale głosowym
 var dispatcher = null;
 /// Wymaganie dostępu do zarządzenia plikami JSON
-var fs = require('fs');
-/// Komendy bota
+const fs = require('fs');
+/* KOMENDY BOTA */
 bot.on("message", msg => {
-
-  // Lista wyzywających zdań o długich nogach Darwina. Będzie potrzebna w komendzie ?hejtnadlugienogi
+  /// Lista wyzywających zdań o długich nogach Darwina. Będzie potrzebna w komendzie ?hejtnadlugienogi
   var dlugieNogi = new Array();
   dlugieNogi[0] = "Długie nogi Darwina są gówniane!";
   dlugieNogi[1] = "Długie nogi Darwina są cholernie głupie!";
@@ -48,111 +49,166 @@ bot.on("message", msg => {
   dlugieNogi[27] = "Długie nogi Darwina są za brzydkie!";
   dlugieNogi[28] = "Długie nogi Darwina to illuminati!";
 
+  /// Lista możliwych odpowiedzi na komendę ?8ball
+  var eightBall = new Array();
+  eightBall[0] = "Na 100% **NIE!**";
+  eightBall[1] = "Na pewno nie";
+  eightBall[2] = "Zdecydowanie nie";
+  eightBall[3] = "Chyba nie";
+  eightBall[4] = "Możliwe, że nie";
+  eightBall[5] = "Myślę, że nie";
+  eightBall[6] = "Moje źródła mówią, że nie"
+  eightBall[7] = "Nie";
+  eightBall[8] = "Nie wiem";
+  eightBall[9] = "Nie jestem pewny";
+  eightBall[10] = "Nie mam zdania";
+  eightBall[11] = "Tak";
+  eightBall[12] = "Moje źródła mówią, że tak";
+  eightBall[13] = "Myślę, że tak";
+  eightBall[14] = "Możliwe, że tak";
+  eightBall[15] = "Chyba tak";
+  eightBall[16] = "Zdecydowanie tak";
+  eightBall[17] = "Na pewno tak";
+  eightBall[18] = "Na 100% **TAK!**";
+
+    /// Dzielenie wiadomości na części
     var messageParts = msg.content.split(' ');
-    var command = messageParts[0].toLowerCase();
+    /// Splatanie wiadomości
     var parameters = messageParts.splice(1, messageParts.length);
 
+    /// Jeżeli komenda nie zaczyna się od prefiksu, nic nie zwracaj
     if(!msg.content.startsWith(config.prefix)) return;
 
+    /// Jeżeli użytkownik nadający komendę jest Xsero Botem, nic nie zwracaj
     if(msg.author.bot) return;
 
-    // Komenda ?ping
+    /// Komenda ?ping
     if(msg.content.startsWith(config.prefix + "ping")) {
         msg.channel.sendMessage("Pong!");
     }
 
-    // Komenda ?myavatar
+    /// Komenda ?myavatar
     if(msg.content.startsWith(config.prefix + "myavatar")) {
-            msg.reply(`**Twój awatar**: ${msg.author.avatarURL}`);
+        msg.reply(`**twój awatar**: ${msg.author.avatarURL}`);
     }
 
-    // Komenda ?myuserinfo
+    /// Komenda ?myuserinfo
     if(msg.content.startsWith(config.prefix + "myuserinfo")) {
-        msg.reply(`**Informacje dotyczące Twojego konta**:
-
-        **Data rejestracji w serwisie Discord**: ${msg.author.createdAt}
-        **Status obecności**: ${msg.author.presence.status}
-        **ID konta**: ${msg.author.id}
-        **Awatar konta**: ${msg.author.avatarURL}`);
+        msg.channel.sendMessage(`${msg.author} **Informacje dotyczące Twojego konta**:
+        Data rejestracji w serwisie Discord: **${msg.author.createdAt}**
+        Status obecności: **${msg.author.presence.status}**
+        ID konta: **${msg.author.id}**
+        Awatar konta: ${msg.author.avatarURL}`);
     }
 
-    // Komenda ?serverinfo
+    /// Komenda ?serverinfo
     if(msg.content.startsWith(config.prefix + "serverinfo")) {
-        msg.reply(`**Informacje dotyczące danego serwera**:
-
-        **Data założenia serwera**: ${msg.guild.createdAt}
-        **Właściciel serwera**: ${msg.guild.owner}
-        **Region serwera**: ${msg.guild.region}
-        **Liczba użytkowników**: ${msg.guild.memberCount}
-        **Domyślny kanał**: ${msg.guild.defaultChannel}
-        **Poziom weryfikacyjny**: ${msg.guild.verificationLevel}
-        **Limit czasu AFK**: ${msg.guild.afkTimeout} sekund
-        **ID serwera**: ${msg.guild.id}
-        **Ikona serwera**: ${msg.guild.iconURL}`);
+        msg.channel.sendMessage(`${msg.author} **Informacje dotyczące danego serwera**:
+        Data założenia serwera: **${msg.guild.createdAt}**
+        Właściciel serwera: **${msg.guild.owner}**
+        Region serwera: **${msg.guild.region}**
+        Liczba użytkowników: **${msg.guild.memberCount}**
+        Domyślny kanał: **${msg.guild.defaultChannel}**
+        Poziom weryfikacyjny: **${msg.guild.verificationLevel}**
+        Limit czasu AFK: **${msg.guild.afkTimeout}** sekund
+        ID serwera: **${msg.guild.id}**
+        Ikona serwera: ${msg.guild.iconURL}`);
     }
 
-    // Komenda ?e
+    /// Komenda ?e
     if(msg.content.startsWith(config.prefix + "e")) {
-        let e = msg.content.split(" ").slice(1);
-        msg.channel.sendMessage(e[0] + " zrobił to :unamused: :gun:");
+        msg.channel.sendMessage(parameters.join(" ") + " zrobił to :unamused: :gun:");
     }
 
-    // Komenda ?stopspam
+    /// Komenda ?stopspam
     if(msg.content.startsWith(config.prefix + "stopspam")) {
         msg.channel.sendMessage("**PROSZĘ NIE SPAMOWAĆ!**");
     }
 
-    // Komenda ?prefix
+    /// Komenda ?prefix
     if(msg.content.startsWith(config.prefix + "prefix")) {
         if(msg.author.id !== config.ownerID) return msg.channel.sendMessage("Nie masz uprawnień do używania tej komendy!");
-        let args = msg.content.split(" ").slice(1);
-        config.prefix = args[0];
+        config.prefix = parameters[0];
         fs.writeFile('./config.json', JSON.stringify(config), (err) => {if(err) console.error(err)})
+        bot.user.setGame(config.prefix + "help");
 }
 
-    // Komenda ?shutdown
+    /// Komenda ?shutdown
     if(msg.content.startsWith(config.prefix + "shutdown")) {
-        if(msg.author.id !== config.ownerID) return msg.channel.sendMessage("nie masz uprawnień do używania tej komendy!");
+        if(msg.author.id !== config.ownerID) return msg.channel.sendMessage("Nie masz uprawnień do używania tej komendy!");
         msg.channel.sendMessage("`Bot został wyłączony. Na razie, wszyscy!`");
         bot.destroy();
     }
 
-    // Komenda ?siema
+    /// Komenda ?siema
     if(msg.content.startsWith(config.prefix + "siema")) {
         msg.reply("No, siema.");
     }
 
-    // Komenda ?joinchannel
+    /// Komenda ?joinchannel
     if(msg.content.startsWith(config.prefix + "joinchannel")) {
-        msg.reply("próbuję dołączyć do kanału " + parameters[0]);
-        JoinCommand(parameters[0]);
+        msg.reply("dołączam do kanału **" + parameters.join(" ") + "**");
+        JoinCommand(parameters.join(" "));
     }
 
-    // Komenda ?play
+    /// Komenda ?play
     if(msg.content.startsWith(config.prefix + "play")) {
-        PlayCommand(parameters.join(" "), message);
+        PlayCommand(parameters.join(" "), msg);
     }
 
-    // Komenda ?queue
+    /// Komenda ?queue
     if(msg.content.startsWith(config.prefix + "queue")) {
-        PlayQueueCommand(message);
+        PlayQueueCommand(msg);
     }
 
-    // Komenda ?about
+    /// Komenda ?setgame
+    if(msg.content.startsWith(config.prefix + "setgame")) {
+        if(msg.author.id !== config.ownerID) return msg.channel.sendMessage("Nie masz uprawnień do używania tej komendy!");
+        bot.user.setGame(parameters.join(" "));
+    }
+
+    /// Komenda ?about
     if(msg.content.startsWith(config.prefix + "about")) {
       msg.channel.sendMessage(`Bot Discord'a, który został napisany w JavaScript (node.js) używając biblioteki discord.js.
-      Wersja bota: 1.1
-      Repozytorium bota: https://github.com/Xsero/Xsero-Bot`)
+      Autor bota: <@${config.ownerID}>
+      Wersja bota: 1.2.1
+      Repozytorium bota: https://github.com/Xsero/Xsero-Bot
+      Link zaproszeniowy: https://discordapp.com/oauth2/authorize?client_id=263663044473651202&scope=bot&permissions=66186303`);
     }
 
-    // Komenda ?hejtnadlugienogi
+    /// Komenda ?hejtnadlugienogi
     if(msg.content.startsWith(config.prefix + "hejtnadlugienogi")) {
         msg.channel.sendMessage(dlugieNogi[Math.floor(Math.random()*dlugieNogi.length)]);
     }
 
-    // Komenda ?help
+    /// Komenda ?8ball
+    if(msg.content.startsWith(config.prefix + "8ball")) {
+      msg.channel.sendMessage(eightBall[Math.floor(Math.random()*eightBall.length)]);
+    }
+
+    /// Komenda ?say
+    if(msg.content.startsWith(config.prefix + "say")) {
+      msg.channel.sendMessage(parameters.join(" "));
+    }
+
+    /// Komenda ?eval
+    if(msg.content.startsWith(config.prefix + "eval")) {
+      if(msg.author.id !== config.ownerID) return msg.channel.sendMessage("Nie masz uprawnień do używania tej komendy!");
+      try {
+        var code = parameters.join(" ");
+        var evaled = eval(code);
+
+        if (typeof evaled !== "string")
+          evaled = require("util").inspect(evaled);
+
+        msg.channel.sendCode("xl", clean(evaled));
+      } catch(err) {
+        msg.channel.sendMessage(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+      }
+    }
+    /// Komenda ?help
     if(msg.content.startsWith(config.prefix + "help")) {
-        msg.channel.sendMessage(`W chwili obecnej dostępnych jest 13 komend dla wszystkich i 3 komendy wyłącznie dla właściciela bota:
+        msg.channel.sendMessage(`W chwili obecnej dostępnych jest 15 komend dla wszystkich i 4 komendy wyłącznie dla właściciela bota:
 
         Komendy dostępne dla wszystkich:
         **?ping**
@@ -166,62 +222,83 @@ bot.on("message", msg => {
         **?play**
         **?queue**
         **?hejtnadlugienogi**
+        **?8ball**
+        **?say**
         **?help**
         **?about**
 
         Komendy dostępne wyłącznie dla właściciela bota:
         **?prefix**
+        **?setgame**
+        **?eval**
         **?shutdown**
 
+        Łączna ilość komend: 19
         Możecie wymyślić propozycje swoich komend. :wink:
         Ponadto należy zwrócić uwagę na to, że bot nie jest jeszcze dopracowany!
-        Żeby uzyskać informacje na temat tych komend wpisz ?help (dowolna komenda).`);
+        Żeby uzyskać informacje na temat tych komend wpisz **?helpcommand *dowolna komenda***.`);
     }
     // Informacje o poszczególnych komendach
-    if(msg.content.startsWith(config.prefix + "help ping")) {
+    if(msg.content.startsWith(config.prefix + "helpcommand ping")) {
         msg.channel.sendMessage("Testowa komenda. Sprawdza, czy bot będzie odpisywał.");
     }
-    else if(msg.content.startsWith(config.prefix + "help avatar")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand avatar")) {
         msg.channel.sendMessage("Przesyła link do Twojego awatara");
     }
-    else if(msg.content.startsWith(config.prefix + "help info")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand info")) {
         msg.channel.sendMessage("Udziela informacji o Twoim koncie");
     }
-    else if(msg.content.startsWith(config.prefix + "help serverinfo")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand serverinfo")) {
         msg.channel.sendMessage("Udziela informacji o serwerze, na którym napisano tę komendę");
     }
-    else if(msg.content.startsWith(config.prefix + "help e")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand e")) {
         msg.channel.sendMessage("Wiadomo, do czego prowadzi ta komenda. :laughing:");
     }
-    else if(msg.content.startsWith(config.prefix + "help stopspam")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand stopspam")) {
         msg.channel.sendMessage("Próbuje powstrzymać rozszerzający się spam");
     }
-    else if(msg.content.startsWith(config.prefix + "help siema")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand siema")) {
         msg.channel.sendMessage(`Odpisuje "siema" do Ciebie.`);
     }
-    else if(msg.content.startsWith(config.prefix + "help joinchannel")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand joinchannel")) {
         msg.channel.sendMessage("Dołącza bota do kanału głosowego");
     }
-    else if(msg.content.startsWith(config.prefix + "help play")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand play")) {
         msg.channel.sendMessage("Dodaje ścieżkę audio do kolejki, która będzie grana, kiedy będzie jej kolej");
     }
-    else if(msg.content.startsWith(config.prefix + "help queue")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand queue")) {
         msg.channel.sendMessage("Pokazuje kolejkę ścieżek audio");
     }
-    else if(msg.content.startsWith(config.prefix + "help about")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand about")) {
         msg.channel.sendMessage("Wyświetla informacje o bocie.");
     }
-    else if(msg.content.startsWith(config.prefix + "help hejtnadlugienogi")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand hejtnadlugienogi")) {
         msg.channel.sendMessage("Dla hejtujących długie nogi Darwina - ta komenda pokazuje jedno z losowych wyzywających zdań o tych nogach");
     }
-    else if(msg.content.startsWith(config.prefix + "help prefix")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand prefix")) {
         msg.channel.sendMessage("**(KOMENDA DOSTĘNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Zmienia prefiks komend");
     }
-    else if(msg.content.startsWith(config.prefix + "help shutdown")) {
+    else if(msg.content.startsWith(config.prefix + "helpcommand shutdown")) {
         msg.channel.sendMessage("**(KOMENDA DOSTĘPNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Wyłącza bota");
     }
+    else if(msg.content.startsWith(config.prefix + "helpcommand 8ball")) {
+        msg.channel.sendMessage("Zadaje pytanie do kuli 8, która będzie odpowiadała losowo.");
+    }
+    else if(msg.content.startsWith(config.prefix + "helpcommand say")) {
+        msg.channel.sendMessage("Powtórzy to, co ty napisałeś.");
+    }
+    else if(msg.content.startsWith(config.prefix + "helpcommand eval")) {
+        msg.channel.sendMessage("**(KOMENDA DOSTĘPNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Ewaluuje cokolwiek, co użytkownik napisze.")
+    }
 });
-
+/* FUNKCJE */
+/// Wyczyszcza wiadomość
+function clean(text) {
+  if (typeof(text) === "string")
+    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+  else
+    return text;
+}
 /// Włącza ścieżkę audio na podstawie wyników wyszukiwania frazu
 function PlayCommand(searchTerm) {
     // jeżeli bot nie jest na żadnym kanale głosowym, dołącz do ogólnego
@@ -236,7 +313,7 @@ function PlayCommand(searchTerm) {
 }
 
 /// Kolejka ścieżek audio
-function PlayQueueCommand(message) {
+function PlayQueueCommand(msg) {
     var queueString = "";
 
     for(var x = 0; x < ytAudioQueue.length; x++) {
@@ -338,21 +415,33 @@ function PlayNextStreamInQueue() {
     }
 }
 
-// Informacja o nowym użytkowniku na serwerze
+/* INNE POLECENIA BOTA */
+/// Informacja o nowym użytkowniku na serwerze
 bot.on("guildMemberAdd", (member) => {
-console.log(`Użytkownik ${member.user.username} dołączył do serwera ${member.guild.name}`);
-member.guild.defaultChannel.sendMessage(`**${member.user.username}** dołączył do nas! Witaj, **${member.user.username}**!`);
+  console.log(`Użytkownik ${member.user.username} dołączył do serwera ${member.guild.name}`);
+  member.guild.defaultChannel.sendMessage(`**${member.user.username}** dołączył do nas! Witaj, **${member.user.username}**! :smiley:`);
 });
 
 /// Informacja o opuszczeniu/wyrzuceniu użytkownika z serwera
 bot.on("guildMemberRemove", (member) => {
-console.log(`Użytkownik ${member.user.username} opuścił serwer ${member.guild.name}`);
-member.guild.defaultChannel.sendMessage(`**${member.user.username}** opuścił nas. :frowning:`);
+  console.log(`Użytkownik ${member.user.username} opuścił serwer ${member.guild.name}`);
+  member.guild.defaultChannel.sendMessage(`**${member.user.username}** opuścił nas. :frowning:`);
 });
+
+/// Informacja o dołączeniu do nowego serwera
+bot.on("guildCreate", (guild) => {
+  console.log(`Dodano nowy serwer: ${guild.name}, założony przez ${guild.owner.user.username}.`);
+});
+
+// Informacja o opuszczeniu serwera
+bot.on("guildDelete", (guild) => {
+  console.log(`Opuszczono serwer: ${guild.name}.`);
+})
 
 /// Ta funkcja zostaje włączona, gdy bot będzie online
 bot.on('ready', () => {
 console.log(`Gotowy do aktywności w ${bot.channels.size} kanałach na ${bot.guilds.size} serwerach, łącznie obsługuję ${bot.users.size} użytkowników`);
+bot.user.setGame(config.prefix + "help");
 });
 
 /// Te funkcje informują konsolę o błędach, ostrzeżeniach i debugowaniach
