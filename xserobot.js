@@ -115,11 +115,6 @@ bot.on("message", msg => {
         Ikona serwera: ${msg.guild.iconURL}`);
     }
 
-    /// Komenda ?e
-    if(msg.content.startsWith(config.prefix + "e")) {
-        msg.channel.sendMessage(parameters.join(" ") + " zrobił to :unamused: :gun:");
-    }
-
     /// Komenda ?stopspam
     if(msg.content.startsWith(config.prefix + "stopspam")) {
         msg.channel.sendMessage("**PROSZĘ NIE SPAMOWAĆ!**");
@@ -171,7 +166,7 @@ bot.on("message", msg => {
     if(msg.content.startsWith(config.prefix + "about")) {
       msg.channel.sendMessage(`Bot Discord'a, który został napisany w JavaScript (node.js) używając biblioteki discord.js.
       Autor bota: <@${config.ownerID}>
-      Wersja bota: 1.2.1
+      Wersja bota: 1.2.2
       Repozytorium bota: https://github.com/Xsero/Xsero-Bot
       Link zaproszeniowy: https://discordapp.com/oauth2/authorize?client_id=263663044473651202&scope=bot&permissions=66186303`);
     }
@@ -183,7 +178,7 @@ bot.on("message", msg => {
 
     /// Komenda ?8ball
     if(msg.content.startsWith(config.prefix + "8ball")) {
-      msg.channel.sendMessage(eightBall[Math.floor(Math.random()*eightBall.length)]);
+      msg.channel.sendMessage("Kula :8ball: odpowiada: **" + eightBall[Math.floor(Math.random()*eightBall.length)] + "**");
     }
 
     /// Komenda ?say
@@ -208,7 +203,7 @@ bot.on("message", msg => {
     }
     /// Komenda ?help
     if(msg.content.startsWith(config.prefix + "help")) {
-        msg.channel.sendMessage(`W chwili obecnej dostępnych jest 15 komend dla wszystkich i 4 komendy wyłącznie dla właściciela bota:
+        msg.channel.sendMessage(`W chwili obecnej dostępnych jest 14 komend dla wszystkich i 4 komendy wyłącznie dla właściciela bota:
 
         Komendy dostępne dla wszystkich:
         **?ping**
@@ -222,7 +217,6 @@ bot.on("message", msg => {
         **?play**
         **?queue**
         **?hejtnadlugienogi**
-        **?8ball**
         **?say**
         **?help**
         **?about**
@@ -233,61 +227,58 @@ bot.on("message", msg => {
         **?eval**
         **?shutdown**
 
-        Łączna ilość komend: 19
+        Łączna ilość komend: 18
         Możecie wymyślić propozycje swoich komend. :wink:
         Ponadto należy zwrócić uwagę na to, że bot nie jest jeszcze dopracowany!
         Żeby uzyskać informacje na temat tych komend wpisz **?helpcommand *dowolna komenda***.`);
     }
     // Informacje o poszczególnych komendach
-    if(msg.content.startsWith(config.prefix + "helpcommand ping")) {
+    if(msg.content.startsWith(config.prefix + "help ping")) {
         msg.channel.sendMessage("Testowa komenda. Sprawdza, czy bot będzie odpisywał.");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand avatar")) {
+    else if(msg.content.startsWith(config.prefix + "help avatar")) {
         msg.channel.sendMessage("Przesyła link do Twojego awatara");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand info")) {
+    else if(msg.content.startsWith(config.prefix + "help info")) {
         msg.channel.sendMessage("Udziela informacji o Twoim koncie");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand serverinfo")) {
+    else if(msg.content.startsWith(config.prefix + "help serverinfo")) {
         msg.channel.sendMessage("Udziela informacji o serwerze, na którym napisano tę komendę");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand e")) {
-        msg.channel.sendMessage("Wiadomo, do czego prowadzi ta komenda. :laughing:");
-    }
-    else if(msg.content.startsWith(config.prefix + "helpcommand stopspam")) {
+    else if(msg.content.startsWith(config.prefix + "help stopspam")) {
         msg.channel.sendMessage("Próbuje powstrzymać rozszerzający się spam");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand siema")) {
+    else if(msg.content.startsWith(config.prefix + "help siema")) {
         msg.channel.sendMessage(`Odpisuje "siema" do Ciebie.`);
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand joinchannel")) {
+    else if(msg.content.startsWith(config.prefix + "help joinchannel")) {
         msg.channel.sendMessage("Dołącza bota do kanału głosowego");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand play")) {
+    else if(msg.content.startsWith(config.prefix + "help play")) {
         msg.channel.sendMessage("Dodaje ścieżkę audio do kolejki, która będzie grana, kiedy będzie jej kolej");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand queue")) {
+    else if(msg.content.startsWith(config.prefix + "help queue")) {
         msg.channel.sendMessage("Pokazuje kolejkę ścieżek audio");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand about")) {
+    else if(msg.content.startsWith(config.prefix + "help about")) {
         msg.channel.sendMessage("Wyświetla informacje o bocie.");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand hejtnadlugienogi")) {
+    else if(msg.content.startsWith(config.prefix + "help hejtnadlugienogi")) {
         msg.channel.sendMessage("Dla hejtujących długie nogi Darwina - ta komenda pokazuje jedno z losowych wyzywających zdań o tych nogach");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand prefix")) {
+    else if(msg.content.startsWith(config.prefix + "help prefix")) {
         msg.channel.sendMessage("**(KOMENDA DOSTĘNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Zmienia prefiks komend");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand shutdown")) {
+    else if(msg.content.startsWith(config.prefix + "help shutdown")) {
         msg.channel.sendMessage("**(KOMENDA DOSTĘPNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Wyłącza bota");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand 8ball")) {
+    else if(msg.content.startsWith(config.prefix + "help 8ball")) {
         msg.channel.sendMessage("Zadaje pytanie do kuli 8, która będzie odpowiadała losowo.");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand say")) {
+    else if(msg.content.startsWith(config.prefix + "help say")) {
         msg.channel.sendMessage("Powtórzy to, co ty napisałeś.");
     }
-    else if(msg.content.startsWith(config.prefix + "helpcommand eval")) {
+    else if(msg.content.startsWith(config.prefix + "help eval")) {
         msg.channel.sendMessage("**(KOMENDA DOSTĘPNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Ewaluuje cokolwiek, co użytkownik napisze.")
     }
 });
@@ -301,7 +292,7 @@ function clean(text) {
 }
 /// Włącza ścieżkę audio na podstawie wyników wyszukiwania frazu
 function PlayCommand(searchTerm) {
-    // jeżeli bot nie jest na żadnym kanale głosowym, dołącz do ogólnego
+    // jeżeli bot nie jest na żadnym kanale głosowym, dołącz do głównego kanału
     if(bot.voiceConnections.array().length === 0) {
         if (bot.voiceConnections.array().length == 0) {
         var defaultVoiceChannel = bot.channels.find(val => val.type === 'voice').name;
