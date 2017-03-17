@@ -103,7 +103,7 @@ bot.on("message", msg => {
 
     /// Komenda ?serverinfo
     if(msg.content.startsWith(config.prefix + "serverinfo")) {
-        msg.channel.sendMessage(`${msg.author} **Informacje dotyczące danego serwera**:
+        msg.channel.sendMessage(`**Informacje dotyczące danego serwera**:
         Data założenia serwera: **${msg.guild.createdAt}**
         Właściciel serwera: **${msg.guild.owner}**
         Region serwera: **${msg.guild.region}**
