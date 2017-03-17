@@ -229,7 +229,7 @@ bot.on("message", msg => {
         Łączna ilość komend: 18
         Możecie wymyślić propozycje swoich komend. :wink:
         Ponadto należy zwrócić uwagę na to, że bot nie jest jeszcze dopracowany!
-        Żeby uzyskać informacje na temat tych komend wpisz **?helpcommand *dowolna komenda***.`);
+        Żeby uzyskać informacje na temat tych komend wpisz **?help *dowolna komenda***.`);
     }
     // Informacje o poszczególnych komendach
     if(msg.content.startsWith(config.prefix + "help ping")) {
