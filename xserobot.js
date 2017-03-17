@@ -210,7 +210,6 @@ bot.on("message", msg => {
         **?myavatar**
         **?myuserinfo**
         **?serverinfo**
-        **?e**
         **?stopspam**
         **?siema**
         **?joinchannel**
