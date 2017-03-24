@@ -226,7 +226,7 @@ bot.on("message", msg => {
         **?eval**
         **?shutdown**
 
-        Łączna ilość komend: 18
+        Łączna liczba komend: 18
         Możecie wymyślić propozycje swoich komend. :wink:
         Ponadto należy zwrócić uwagę na to, że bot nie jest jeszcze dopracowany!
         Żeby uzyskać informacje na temat tych komend wpisz **?help *dowolna komenda***.`);
