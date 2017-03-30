@@ -51,7 +51,7 @@ bot.on("message", msg => {
 
   /// Lista możliwych odpowiedzi na komendę ?8ball
   var eightBall = new Array();
-  eightBall[0] = "Na 100% **NIE!**";
+  eightBall[0] = "Na 100% NIE!";
   eightBall[1] = "Na pewno nie";
   eightBall[2] = "Zdecydowanie nie";
   eightBall[3] = "Chyba nie";
@@ -69,7 +69,7 @@ bot.on("message", msg => {
   eightBall[15] = "Chyba tak";
   eightBall[16] = "Zdecydowanie tak";
   eightBall[17] = "Na pewno tak";
-  eightBall[18] = "Na 100% **TAK!**";
+  eightBall[18] = "Na 100% TAK!";
 
     /// Dzielenie wiadomości na części
     var messageParts = msg.content.split(' ');
@@ -87,18 +87,40 @@ bot.on("message", msg => {
         msg.channel.sendMessage("Pong!");
     }
 
-    /// Komenda ?myavatar
-    if(msg.content.startsWith(config.prefix + "myavatar")) {
-        msg.reply(`**twój awatar**: ${msg.author.avatarURL}`);
-    }
+    /// Komenda ?avatar
+    if(msg.content.startsWith(config.prefix + "avatar")) {
+        if(msg.mentions.users.size === 0) {
+          return msg.reply(`**twój awatar:** ${msg.author.avatarURL}`);
+        }
+        let avatarUser = msg.guild.member(msg.mentions.users.first());
+        if(!avatarUser) {
+          return msg.channel.sendMessage("Nazwa użytkownika jest niepoprawna.");
+        }
+        msg.channel.sendMessage(`${msg.author} **Awatar określonego przez Ciebie użytkownika:** ${avatarUser.avatarURL}`);
+      }
 
-    /// Komenda ?myuserinfo
-    if(msg.content.startsWith(config.prefix + "myuserinfo")) {
-        msg.channel.sendMessage(`${msg.author} **Informacje dotyczące Twojego konta**:
+    /// Komenda ?userinfo
+    if(msg.content.startsWith(config.prefix + "userinfo")) {
+      if(msg.mentions.users.size === 0) {
+        return msg.channel.sendMessage(`${msg.author} **Informacje dotyczące Twojego konta:**
+
         Data rejestracji w serwisie Discord: **${msg.author.createdAt}**
         Status obecności: **${msg.author.presence.status}**
+        Jest botem: **${msg.author.bot}**
         ID konta: **${msg.author.id}**
         Awatar konta: ${msg.author.avatarURL}`);
+      }
+      let userInfo = msg.guild.member(msg.mentions.users.first());
+      if (!userInfo) {
+        return msg.reply("Nazwa użytkownika jest niepoprawna.");
+      }
+      msg.channel.sendMessage(`${msg.author} **Informacje dotyczące określonego przez Ciebie użytkownika konta:**
+
+      Data rejestracji w serwisie Discord: **${userInfo.createdAt}**
+      Status obecności: **${userInfo.presence.status}**
+      Jest botem: **${userInfo.bot}**
+      ID konta: **${userInfo.id}**
+      Awatar konta: ${userInfo.avatarURL}`);
     }
 
     /// Komenda ?serverinfo
@@ -110,6 +132,7 @@ bot.on("message", msg => {
         Liczba użytkowników: **${msg.guild.memberCount}**
         Domyślny kanał: **${msg.guild.defaultChannel}**
         Poziom weryfikacyjny: **${msg.guild.verificationLevel}**
+        ID kanału AFK: **${msg.guild.afkChannelID}**
         Limit czasu AFK: **${msg.guild.afkTimeout}** sekund
         ID serwera: **${msg.guild.id}**
         Ikona serwera: ${msg.guild.iconURL}`);
@@ -166,7 +189,7 @@ bot.on("message", msg => {
     if(msg.content.startsWith(config.prefix + "about")) {
       msg.channel.sendMessage(`Bot Discord'a, który został napisany w JavaScript (node.js) używając biblioteki discord.js.
       Autor bota: <@${config.ownerID}>
-      Wersja bota: 1.2.2
+      Wersja bota: 1.2.3
       Repozytorium bota: https://github.com/Xsero/Xsero-Bot
       Link zaproszeniowy: https://discordapp.com/oauth2/authorize?client_id=263663044473651202&scope=bot&permissions=66186303`);
     }
@@ -178,7 +201,7 @@ bot.on("message", msg => {
 
     /// Komenda ?8ball
     if(msg.content.startsWith(config.prefix + "8ball")) {
-      msg.channel.sendMessage("Kula :8ball: odpowiada: **" + eightBall[Math.floor(Math.random()*eightBall.length)] + "**");
+      msg.channel.sendMessage(`Kula :8ball: odpowiada: **${eightBall[Math.floor(Math.random()*eightBall.length)]}**`);
     }
 
     /// Komenda ?say
@@ -207,8 +230,8 @@ bot.on("message", msg => {
 
         Komendy dostępne dla wszystkich:
         **?ping**
-        **?myavatar**
-        **?myuserinfo**
+        **?avatar**
+        **?userinfo**
         **?serverinfo**
         **?stopspam**
         **?siema**
@@ -236,10 +259,10 @@ bot.on("message", msg => {
         msg.channel.sendMessage("Testowa komenda. Sprawdza, czy bot będzie odpisywał.");
     }
     else if(msg.content.startsWith(config.prefix + "help avatar")) {
-        msg.channel.sendMessage("Przesyła link do Twojego awatara");
+        msg.channel.sendMessage("Przesyła link do Twojego lub określonego przez Ciebie użytkownika awatara");
     }
-    else if(msg.content.startsWith(config.prefix + "help info")) {
-        msg.channel.sendMessage("Udziela informacji o Twoim koncie");
+    else if(msg.content.startsWith(config.prefix + "help userinfo")) {
+        msg.channel.sendMessage("Udziela informacji o Twoim lub określonym przez Ciebie użytkowniku koncie");
     }
     else if(msg.content.startsWith(config.prefix + "help serverinfo")) {
         msg.channel.sendMessage("Udziela informacji o serwerze, na którym napisano tę komendę");
@@ -272,7 +295,7 @@ bot.on("message", msg => {
         msg.channel.sendMessage("**(KOMENDA DOSTĘPNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Wyłącza bota");
     }
     else if(msg.content.startsWith(config.prefix + "help 8ball")) {
-        msg.channel.sendMessage("Zadaje pytanie do kuli 8, która będzie odpowiadała losowo.");
+        msg.channel.sendMessage("Zadaje pytanie do kuli :8ball:, która będzie odpowiadała losowo.");
     }
     else if(msg.content.startsWith(config.prefix + "help say")) {
         msg.channel.sendMessage("Powtórzy to, co ty napisałeś.");
