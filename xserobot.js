@@ -15,6 +15,7 @@ var ytAudioQueue = [];
 var dispatcher = null;
 /// Wymaganie dostępu do zarządzenia plikami JSON
 const fs = require('fs');
+const hook = new Discord.WebhookClient(config.webhookID, config.webhookToken);
 /* KOMENDY BOTA */
 bot.on("message", msg => {
   /// Lista wyzywających zdań o długich nogach Darwina. Będzie potrzebna w komendzie ?hejtnadlugienogi
@@ -224,9 +225,13 @@ bot.on("message", msg => {
         msg.channel.sendMessage(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
       }
     }
+
+    if(msg.content.startsWith(config.prefix + "sendwebhook")) {
+      hook.sendMessage(parameters.join(" "));
+    }
     /// Komenda ?help
     if(msg.content.startsWith(config.prefix + "help")) {
-        msg.channel.sendMessage(`W chwili obecnej dostępnych jest 14 komend dla wszystkich i 4 komendy wyłącznie dla właściciela bota:
+        msg.channel.sendMessage(`W chwili obecnej dostępnych jest 15 komend dla wszystkich i 4 komendy wyłącznie dla właściciela bota:
 
         Komendy dostępne dla wszystkich:
         **?ping**
@@ -242,6 +247,7 @@ bot.on("message", msg => {
         **?say**
         **?help**
         **?about**
+        **?sendwebhook**
 
         Komendy dostępne wyłącznie dla właściciela bota:
         **?prefix**
@@ -249,7 +255,7 @@ bot.on("message", msg => {
         **?eval**
         **?shutdown**
 
-        Łączna liczba komend: 18
+        Łączna liczba komend: 19
         Możecie wymyślić propozycje swoich komend. :wink:
         Ponadto należy zwrócić uwagę na to, że bot nie jest jeszcze dopracowany!
         Żeby uzyskać informacje na temat tych komend wpisz **?help *dowolna komenda***.`);
@@ -301,7 +307,10 @@ bot.on("message", msg => {
         msg.channel.sendMessage("Powtórzy to, co ty napisałeś.");
     }
     else if(msg.content.startsWith(config.prefix + "help eval")) {
-        msg.channel.sendMessage("**(KOMENDA DOSTĘPNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Ewaluuje cokolwiek, co użytkownik napisze.")
+        msg.channel.sendMessage("**(KOMENDA DOSTĘPNA WYŁĄCZNIE DLA WŁAŚCICIELA BOTA!)** Ewaluuje cokolwiek, co użytkownik napisze.");
+    }
+    else if(msg.content.startsWith(config.prefix + "help sendwebhook")) {
+        msg.channel.sendMessage("**(KOMENDA DOSTĘPNA WYŁĄCZNIE DLA CZŁONKÓW 134CZATU! JEŚLI CHCESZ ZAPROSZENIE, SKONTAKTUJ SIĘ Z TWÓRCĄ (Xsero#8984))** Wysyła wiadomość używając webhooka");
     }
 });
 /* FUNKCJE */
