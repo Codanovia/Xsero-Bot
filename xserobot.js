@@ -15,6 +15,7 @@ var ytAudioQueue = [];
 var dispatcher = null;
 /// Wymaganie dostępu do zarządzenia plikami JSON
 const fs = require('fs');
+/// Dostęp do danych webhooka
 const hook = new Discord.WebhookClient(config.webhookID, config.webhookToken);
 /* KOMENDY BOTA */
 bot.on("message", msg => {
